@@ -2,8 +2,10 @@ export class Parameter<Value> {
   value: Value;
 }
 
-export type Query<T> = never; // Fix me!
-type Params<T> = never; // Fix me!
+type ParameterConstructor<T = any> = new (...args: any[]) => T;
+type Query<T extends any> = T extends { [K in keyof T]: ParameterConstructor | string } ? T : never;
+type ExcludeNonParams<T> = Pick<T, { [K in keyof T]: T[K] extends Parameter<any> ? K: never}[keyof T]>;
+type Params<T = any> = { [K in keyof ExcludeNonParams<T>]: T[K] extends Parameter<infer V> ? V : never};
 
 export class QueryExecuter<TEntity, TQuery extends Query<TEntity>> {
   constructor(private query: TQuery) {}
