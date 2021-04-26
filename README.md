@@ -1,1 +1,1 @@
-# typescript-typings
+# Typescript Typings Challenges
