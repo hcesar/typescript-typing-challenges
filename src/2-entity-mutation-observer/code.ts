@@ -1,4 +1,4 @@
-type PropEventSource<T> = never; // FIX ME
+type PropEventSource<T> = Omit<{ [K in keyof T & string as `on${Capitalize<K>}Changed`]: (val: T[K]) => void }, 'onIdChanged'>;
 
 class PersonaMutationObserver<T> {
   constructor(obj: T, observer: PropEventSource<T>) {}
@@ -18,7 +18,7 @@ const person: Person = {
   country: "Spain",
 };
 
-//OK (callback should be infered to correct type or can be explicity declared)
+//OK (callback should be inferred to correct type or can be explicity declared)
 const observer = new PersonaMutationObserver(person, {
   onNameChanged: (name) => console.log(name.toLocaleLowerCase()),
   onBirthDateChanged: (date) => console.log(date.toLocaleDateString()),
